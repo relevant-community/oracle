@@ -203,7 +203,7 @@ type App struct {
 	ScopedIBCKeeper      capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper capabilitykeeper.ScopedKeeper
 
-	oracleKeeper oraclekeeper.Keeper
+	OracleKeeper oraclekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
 
 	// the module manager
@@ -329,8 +329,12 @@ func New(
 	// If evidence needs to be handled for the app, set routes in router here and seal
 	app.EvidenceKeeper = *evidenceKeeper
 
-	app.oracleKeeper = *oraclekeeper.NewKeeper(
-		appCodec, keys[oracletypes.StoreKey], keys[oracletypes.MemStoreKey],
+	app.OracleKeeper = *oraclekeeper.NewKeeper(
+		appCodec,
+		keys[oracletypes.StoreKey],
+		keys[oracletypes.MemStoreKey],
+		app.StakingKeeper,
+		app.GetSubspace(oracletypes.ModuleName),
 	)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
@@ -369,7 +373,7 @@ func New(
 		ibc.NewAppModule(app.IBCKeeper),
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
-		oracle.NewAppModule(appCodec, app.oracleKeeper),
+		oracle.NewAppModule(appCodec, app.OracleKeeper),
 		// this line is used by starport scaffolding # stargate/app/appModule
 	)
 
@@ -598,6 +602,7 @@ func initParamsKeeper(appCodec codec.BinaryMarshaler, legacyAmino *codec.LegacyA
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
+	paramsKeeper.Subspace(oracletypes.ModuleName)
 
 	return paramsKeeper
 }
