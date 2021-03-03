@@ -28,5 +28,7 @@ message GenesisState {
         (gogoproto.nullable) = false
     ];
     repeated bytes prevotes = 6 [(gogoproto.nullable) = false];
+    map<string, uint64> finalizedRounds = 7 [(gogoproto.nullable) = false];
+
 }
 

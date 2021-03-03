@@ -151,6 +151,22 @@ func (k Keeper) PendingRounds(c context.Context, req *types.QueryPendingRoundsRe
 	return &types.QueryPendingRoundsResponse{PendingRounds: pendingRounds}, nil
 }
 
+// LastFinalizedRound implements the Query/LastFinalizedRound gRPC method
+func (k Keeper) LastFinalizedRound(c context.Context, req *types.QueryLastFinalizedRoundRequest) (*types.QueryLastFinalizedRoundResponse, error) {
+	sdkCtx := sdk.UnwrapSDKContext(c)
+
+	if req == nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid request")
+	}
+
+	if req.ClaimType == "" {
+		return nil, status.Error(codes.InvalidArgument, "missing claimType")
+	}
+
+	lastRound := k.GetLastFinalizedRound(sdkCtx, req.ClaimType)
+	return &types.QueryLastFinalizedRoundResponse{LastFinalizedRound: lastRound}, nil
+}
+
 // Round implements the Query/Round gRPC method
 func (k Keeper) Round(c context.Context, req *types.QueryRoundRequest) (*types.QueryRoundResponse, error) {
 	sdkCtx := sdk.UnwrapSDKContext(c)

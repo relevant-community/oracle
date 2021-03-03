@@ -26,6 +26,7 @@ var (
 		TestClaimType: {
 			ClaimType:     TestClaimType,
 			VoteThreshold: DefaultVoteThreshold,
+			VotePeriod:    1,
 		},
 		TestPrevoteClaimType: {
 			ClaimType:     TestPrevoteClaimType,
@@ -69,8 +70,8 @@ func validateClaimParams(i interface{}) error {
 	}
 
 	for _, param := range claimParams {
-		if param.Prevote && param.VotePeriod == 0 {
-			return fmt.Errorf("vote period must be positive: %d", param.VotePeriod)
+		if param.VotePeriod <= 0 {
+			return fmt.Errorf("vote period must be greater than 0: %d", param.VotePeriod)
 		}
 		if param.VoteThreshold.LTE(sdk.NewDecWithPrec(33, 2)) {
 			return fmt.Errorf("oracle parameter VoteTheshold must be greater than 33 percent")

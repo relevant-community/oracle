@@ -131,6 +131,19 @@ func (s *IntegrationTestSuite) TestGRPCQueries() {
 			},
 			"",
 		},
+		{
+			"Get finlized round",
+			fmt.Sprintf("%s/relevantcommunity/oracle/oracle/finalized_round/test", baseURL),
+			map[string]string{
+				grpctypes.GRPCBlockHeightHeader: "1",
+			},
+			false,
+			&types.QueryLastFinalizedRoundResponse{},
+			&types.QueryLastFinalizedRoundResponse{
+				LastFinalizedRound: 0,
+			},
+			"",
+		},
 	}
 
 	for _, tc := range testCases {

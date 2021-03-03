@@ -47,10 +47,10 @@ func (k Keeper) GetAllDelegations(ctx sdk.Context) []types.MsgDelegate {
 // IterateDelegations iterates over all delegate address pairs in the store
 func (k Keeper) IterateDelegations(ctx sdk.Context, handler func(del, val sdk.AccAddress) (stop bool)) {
 	store := ctx.KVStore(k.storeKey)
-	iter := sdk.KVStorePrefixIterator(store, types.DelegateKey)
+	iter := sdk.KVStorePrefixIterator(store, types.DelValKey)
 	defer iter.Close()
 	for ; iter.Valid(); iter.Next() {
-		del := sdk.AccAddress(bytes.TrimPrefix(iter.Key(), types.DelegateKey))
+		del := sdk.AccAddress(bytes.TrimPrefix(iter.Key(), types.DelValKey))
 		val := sdk.AccAddress(iter.Value())
 		if handler(del, val) {
 			break

@@ -22,6 +22,7 @@ func NewGenesisState(
 	pending map[string]([]uint64),
 	delegations []MsgDelegate,
 	prevotes [][]byte,
+	finalizedRounds map[string](uint64),
 ) *GenesisState {
 
 	claims := make([]*types.Any, len(_claims))
@@ -43,22 +44,24 @@ func NewGenesisState(
 	}
 
 	return &GenesisState{
-		Params:      params,
-		Rounds:      rounds,
-		Claims:      claims,
-		Pending:     genPending,
-		Delegations: delegations,
-		Prevotes:    prevotes,
+		Params:          params,
+		Rounds:          rounds,
+		Claims:          claims,
+		Pending:         genPending,
+		Delegations:     delegations,
+		Prevotes:        prevotes,
+		FinalizedRounds: finalizedRounds,
 	}
 }
 
 // DefaultGenesis returns the default Capability genesis state
 func DefaultGenesis() *GenesisState {
 	return &GenesisState{
-		Params:  DefaultParams(),
-		Claims:  []*types.Any{},
-		Rounds:  []Round{},
-		Pending: map[string]GenesisState_ListOfUint{},
+		Params:          DefaultParams(),
+		Claims:          []*types.Any{},
+		Rounds:          []Round{},
+		Pending:         map[string]GenesisState_ListOfUint{},
+		FinalizedRounds: map[string](uint64){},
 	}
 }
 

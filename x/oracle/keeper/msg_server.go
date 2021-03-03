@@ -23,60 +23,22 @@ func NewMsgServerImpl(keeper Keeper) types.MsgServer {
 
 var _ types.MsgServer = msgServer{}
 
-func getValidatorAddr(ctx sdk.Context, k msgServer, signer sdk.AccAddress) sdk.ValAddress {
-	// get delegator's validator
-	valAddr := sdk.ValAddress(k.GetValidatorAddressFromDelegate(ctx, signer))
-
-	// if there is no delegation it must be the validator
-	if valAddr == nil {
-		valAddr = sdk.ValAddress(signer)
-	}
-
-	return valAddr
-}
-
 func (k msgServer) Vote(goCtx context.Context, msg *types.MsgVote) (*types.MsgVoteResponse, error) {
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
 	claim := msg.GetClaim()
-	claimType := claim.Type()
 	signer := msg.MustGetSigner()
-
 	valAddr := getValidatorAddr(ctx, k, signer)
 
 	// make sure this message is submitted by a validator
 	val := k.StakingKeeper.Validator(ctx, valAddr)
-
 	if val == nil {
 		return nil, sdkerrors.Wrap(staking.ErrNoValidatorFound, valAddr.String())
 	}
 
-	claimParams := k.ClaimParamsForType(ctx, claimType)
-	var claimTypeExists bool
-	if claimParams.ClaimType == claimType {
-		claimTypeExists = true
-	}
-
-	if claimTypeExists != true {
-		return nil, sdkerrors.Wrap(types.ErrNoClaimTypeExists, claim.Type())
-	}
-
-	var prevoteHash []byte
-	if claimParams.Prevote == true {
-		// when using prevote claims must be submited within the correct round
-		// claim.RoundID == currentRound + roundLength (at least not earlier)
-		claimRoundID := claim.GetRoundID()
-		currentRound := k.GetCurrentRound(ctx, claimType)
-
-		if claimRoundID+claimParams.VotePeriod != currentRound {
-			return nil, sdkerrors.Wrap(types.ErrIncorrectClaimRound, fmt.Sprintf("expected %d, got %d", currentRound-claimParams.VotePeriod, claimRoundID))
-		}
-
-		prevoteHash = types.VoteHash(msg.Salt, claim.Hash().String(), signer)
-		hasPrevote := k.HasPrevote(ctx, prevoteHash)
-		if hasPrevote == false {
-			return nil, sdkerrors.Wrap(types.ErrNoPrevote, claim.Hash().String())
-		}
+	prevoteHash, err := k.isCorrectRound(ctx, msg, signer)
+	if err != nil {
+		return nil, err
 	}
 
 	// store the validator vote
@@ -93,7 +55,7 @@ func (k msgServer) Vote(goCtx context.Context, msg *types.MsgVote) (*types.MsgVo
 		),
 	)
 
-	if claimParams.Prevote == true {
+	if len(prevoteHash) != 0 {
 		k.DeletePrevote(ctx, prevoteHash)
 	}
 
@@ -154,4 +116,60 @@ func (k msgServer) Prevote(goCtx context.Context, msg *types.MsgPrevote) (*types
 	)
 
 	return &types.MsgPrevoteResponse{}, nil
+}
+
+// HELPERS
+
+func (k msgServer) isCorrectRound(ctx sdk.Context, msg *types.MsgVote, signer sdk.AccAddress) ([]byte, error) {
+	claim := msg.GetClaim()
+	claimType := claim.Type()
+
+	// will return empty struct if doesn't exist
+	claimParams := k.ClaimParamsForType(ctx, claimType)
+	if claimParams.ClaimType != claimType {
+		return nil, sdkerrors.Wrap(types.ErrNoClaimTypeExists, claimType)
+	}
+
+	claimRoundID := claim.GetRoundID()
+	lastFinalizedRound := k.GetLastFinalizedRound(ctx, claimType)
+
+	// RoundID should be greater than the LastFinalizedRound
+	if claimRoundID <= lastFinalizedRound {
+		return []byte{}, sdkerrors.Wrap(
+			types.ErrIncorrectClaimRound,
+			fmt.Sprintf("expected current round %d, to be greater than last finalized round %d", claimRoundID, lastFinalizedRound),
+		)
+	}
+
+	// if no prevote we are done
+	if claimParams.Prevote != true {
+		return []byte{}, nil
+	}
+
+	// when using prevote claims must be submited only after the prevote round
+	// claim.RoundID + VotePeriod >= currentRound
+	currentRound := k.GetCurrentRound(ctx, claimType)
+	if claimRoundID+claimParams.VotePeriod < currentRound {
+		return []byte{}, sdkerrors.Wrap(types.ErrIncorrectClaimRound, fmt.Sprintf("expected %d, got %d", currentRound-claimParams.VotePeriod, claimRoundID))
+	}
+
+	prevoteHash := types.VoteHash(msg.Salt, claim.Hash().String(), signer)
+	hasPrevote := k.HasPrevote(ctx, prevoteHash)
+	if hasPrevote == false {
+		return []byte{}, sdkerrors.Wrap(types.ErrNoPrevote, claim.Hash().String())
+	}
+
+	return prevoteHash, nil
+}
+
+func getValidatorAddr(ctx sdk.Context, k msgServer, signer sdk.AccAddress) sdk.ValAddress {
+	// get delegator's validator
+	valAddr := sdk.ValAddress(k.GetValidatorAddressFromDelegate(ctx, signer))
+
+	// if there is no delegation it must be the validator
+	if valAddr == nil {
+		valAddr = sdk.ValAddress(signer)
+	}
+
+	return valAddr
 }

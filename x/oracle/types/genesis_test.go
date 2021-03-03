@@ -26,11 +26,12 @@ func TestDefaultGenesisState(t *testing.T) {
 
 func TestNewGenesisState(t *testing.T) {
 	var (
-		claims      []exported.Claim
-		rounds      []types.Round
-		pending     map[string]([]uint64)
-		delegations []types.MsgDelegate
-		prevotes    [][]byte
+		claims          []exported.Claim
+		rounds          []types.Round
+		pending         map[string]([]uint64)
+		delegations     []types.MsgDelegate
+		prevotes        [][]byte
+		finalizedRounds map[string](uint64)
 	)
 
 	testCases := []struct {
@@ -64,6 +65,7 @@ func TestNewGenesisState(t *testing.T) {
 						pending,
 						delegations,
 						prevotes,
+						finalizedRounds,
 					)
 				})
 			} else {
@@ -75,6 +77,7 @@ func TestNewGenesisState(t *testing.T) {
 						pending,
 						delegations,
 						prevotes,
+						finalizedRounds,
 					)
 				})
 			}
@@ -84,11 +87,12 @@ func TestNewGenesisState(t *testing.T) {
 
 func TestGenesisStateValidate(t *testing.T) {
 	var (
-		genesisState *types.GenesisState
-		testClaim    []exported.Claim
-		pending      map[string]([]uint64)
-		delegations  []types.MsgDelegate
-		prevotes     [][]byte
+		genesisState    *types.GenesisState
+		testClaim       []exported.Claim
+		pending         map[string]([]uint64)
+		delegations     []types.MsgDelegate
+		prevotes        [][]byte
+		finalizedRounds map[string](uint64)
 	)
 	round := []types.Round{}
 	params := types.DefaultParams()
@@ -110,7 +114,7 @@ func TestGenesisStateValidate(t *testing.T) {
 					}
 				}
 				genesisState = types.NewGenesisState(
-					params, round, testClaim, pending, delegations, prevotes,
+					params, round, testClaim, pending, delegations, prevotes, finalizedRounds,
 				)
 			},
 			true,
@@ -127,7 +131,7 @@ func TestGenesisStateValidate(t *testing.T) {
 					}
 				}
 				genesisState = types.NewGenesisState(
-					params, round, testClaim, pending, delegations, prevotes,
+					params, round, testClaim, pending, delegations, prevotes, finalizedRounds,
 				)
 			},
 			false,

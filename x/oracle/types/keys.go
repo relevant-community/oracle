@@ -39,14 +39,14 @@ var (
 	// - 0x03 | prevote_hash -> prevote_hash
 	PrevoteKey = []byte{0x03}
 
-	// - 0x04 | val_address -> delegate_address
-	DelegateKey = []byte{0x04} // key for validator feed delegation
-
 	// - 0x04 | del_address -> val_address
-	DelValKey = []byte{0x04} // key for validator feed delegation
+	DelValKey = []byte{0x05} // key for validator feed delegation
 
-	// - 0x04 | val_address -> del_address
-	ValDelKey = []byte{0x04} // key for validator feed delegation
+	// - 0x05 | val_address -> del_address
+	ValDelKey = []byte{0x06} // key for validator feed delegation
+
+	// - 0x06 | claimType -> roundId
+	FinalizedRoundKey = []byte{0x07} // key for validator feed delegation
 )
 
 // KeyPrefix helper

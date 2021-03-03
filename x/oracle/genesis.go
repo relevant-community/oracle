@@ -47,6 +47,10 @@ func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) 
 	for _, prevote := range genState.Prevotes {
 		k.CreatePrevote(ctx, prevote)
 	}
+
+	for claimType, roundID := range genState.FinalizedRounds {
+		k.SetLastFinalizedRound(ctx, claimType, roundID)
+	}
 }
 
 // ExportGenesis returns the capability module's exported genesis.
@@ -57,6 +61,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	pending := k.GetAllPendingRounds(ctx)
 	delegations := k.GetAllDelegations(ctx)
 	prevotes := k.GetAllPrevotes(ctx)
+	finalizedRounds := k.GetAllFinalizedRounds(ctx)
 
-	return types.NewGenesisState(params, rounds, claims, pending, delegations, prevotes)
+	return types.NewGenesisState(params, rounds, claims, pending, delegations, prevotes, finalizedRounds)
 }

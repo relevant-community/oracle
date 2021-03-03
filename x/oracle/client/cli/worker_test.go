@@ -111,9 +111,6 @@ func (s *IntegrationTestSuite) TestWorkerPrevoteCmd() {
 	// we need to wait 1 extra round to submit claim
 	var endHeight = nextRound + types.TestVotePeriod
 
-	fmt.Println(val.Address.String())
-	fmt.Println(sdk.ValAddress(val.Address.String()).String())
-
 	args := []string{
 		strconv.FormatInt(int64(endHeight), 10),
 		fmt.Sprintf("--%s=%s", flags.FlagFrom, val.Address.String()),
@@ -127,7 +124,6 @@ func (s *IntegrationTestSuite) TestWorkerPrevoteCmd() {
 
 	out, err := clitestutil.ExecTestCLICmd(clientCtx, cli.StartWorkerCmd(), args)
 	s.Require().NoError(err)
-	fmt.Println(out)
 
 	txResp := &sdk.TxResponse{}
 	s.Require().NoError(val.ClientCtx.JSONMarshaler.UnmarshalJSON(out.Bytes(), txResp), out.String())
@@ -139,26 +135,31 @@ func (s *IntegrationTestSuite) TestWorkerPrevoteCmd() {
 	// Claim was created
 	res, err := clitestutil.ExecTestCLICmd(clientCtx, cli.CmdClaim(), []string{testPrevoteClaim.Hash().String()})
 	resType := &types.QueryClaimResponse{}
-	s.Require().NoError(val.ClientCtx.JSONMarshaler.UnmarshalJSON(res.Bytes(), resType))
+	s.Require().NoError(val.ClientCtx.JSONMarshaler.UnmarshalJSON(res.Bytes(), resType), res.String())
 	resClaim := &types.TestClaim{}
 	resClaim.Unmarshal(resType.Claim.Value)
 	s.Require().Equal(resClaim.String(), testPrevoteClaim.String())
 
 }
 
-// TODO test error cases
+//  TODO test edge cases
 // func (s *IntegrationTestSuite) TestWorkerEdgeCasesCmd() {
 // 	val := s.network.Validators[0]
+// 	cli.InitializeWorker(initBlockHandler(testClaim), txHandler)
 
-// 	cli.InitializeWorker(blockHandler, txHandler)
+// 	currentHeight, _ := s.network.LatestHeight()
 
 // 	testCases := map[string]struct {
+// 		pre          func()
 // 		args         []string
 // 		expectErr    bool
 // 		respType     proto.Message
 // 		expectedCode uint32
 // 	}{
-// 		"run-worker": {
+// 		"submit claim for prev round": {
+// 			func() {
+// 				testClaim.BlockHeight = currentHeight - 1
+// 			},
 // 			[]string{
 // 				"1",
 // 				fmt.Sprintf("--%s=%s", flags.FlagFrom, val.Address.String()),
@@ -166,7 +167,7 @@ func (s *IntegrationTestSuite) TestWorkerPrevoteCmd() {
 // 				fmt.Sprintf("--%s=%s", flags.FlagBroadcastMode, flags.BroadcastBlock),
 // 				fmt.Sprintf("--%s=%s", flags.FlagFees, sdk.NewCoins(sdk.NewCoin(s.cfg.BondDenom, sdk.NewInt(10))).String()),
 // 			},
-// 			false,
+// 			true,
 // 			&sdk.TxResponse{},
 // 			0,
 // 		},
@@ -177,7 +178,6 @@ func (s *IntegrationTestSuite) TestWorkerPrevoteCmd() {
 
 // 		s.Run(name, func() {
 // 			clientCtx := val.ClientCtx.WithNodeURI(val.RPCAddress)
-// 			clientCtx.OutputFormat = "json"
 
 // 			out, err := clitestutil.ExecTestCLICmd(clientCtx, cli.StartWorkerCmd(), tc.args)
 
@@ -189,5 +189,6 @@ func (s *IntegrationTestSuite) TestWorkerPrevoteCmd() {
 // 				txResp := tc.respType.(*sdk.TxResponse)
 // 				s.Require().Equal(tc.expectedCode, txResp.Code)
 // 			}
+// 		})
 // 	}
 // }

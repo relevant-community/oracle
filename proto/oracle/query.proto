@@ -25,6 +25,11 @@ service Query {
     option (google.api.http).get = "/relevantcommunity/oracle/oracle/pending_rounds/{claim_type}";
   }
 
+  // LastFinalizedRound queries the pending Rounds of the oracle module
+  rpc LastFinalizedRound(QueryLastFinalizedRoundRequest) returns (QueryLastFinalizedRoundResponse) {
+    option (google.api.http).get = "/relevantcommunity/oracle/oracle/finalized_round/{claim_type}";
+  }
+
   // Vote queries the parameters of the oracle module
   rpc Round(QueryRoundRequest) returns (QueryRoundResponse) {
     option (google.api.http).get = "/relevantcommunity/oracle/oracle/round/{claimType}/{roundId}";
@@ -87,6 +92,18 @@ message QueryPendingRoundsRequest {
 // QueryParamsResponse is the response type for the Query/Params RPC method
 message QueryPendingRoundsResponse {
   repeated uint64 pending_rounds = 1 [(gogoproto.nullable) = false];
+}
+
+
+
+// LastFinalizedRround is the request type for the Query/Params RPC method
+message QueryLastFinalizedRoundRequest {
+  string claim_type = 1;
+}
+
+// LastFinalizedRround is the response type for the Query/Params RPC method
+message QueryLastFinalizedRoundResponse {
+  uint64 lastFinalizedRound = 1;
 }
 
 
