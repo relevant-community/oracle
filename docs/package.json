@@ -10,7 +10,8 @@
     "postserve": "./post.sh",
     "prebuild": "./pre.sh",
     "build": "trap 'exit 0' SIGINT; vuepress build --no-cache",
-    "postbuild": "./post.sh"
+    "postbuild": "./post.sh",
+    "push": "./publish.sh .vuepress/dist"
   },
   "author": "",
   "license": "ISC",
