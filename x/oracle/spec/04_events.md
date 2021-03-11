@@ -6,6 +6,16 @@ order: 4
 
 The oracle module emits the following events:
 
+### MsgDelegate
+
+| Type     | Attribute Key | Attribute Value    |
+| -------- | ------------- | ------------------ |
+| delegate | validator     | {validatorAddress} |
+| delegate | delegate      | {delegateAddress}  |
+| message  | module        | oracle             |
+| message  | action        | delegate           |
+| message  | sender        | {senderAddress}    |
+
 ### MsgPrevote
 
 | Type    | Attribute Key | Attribute Value    |
@@ -25,13 +35,3 @@ The oracle module emits the following events:
 | message | module        | oracle             |
 | message | action        | vote               |
 | message | sender        | {senderAddress}    |
-
-### MsgDelegate
-
-| Type     | Attribute Key | Attribute Value    |
-| -------- | ------------- | ------------------ |
-| delegate | validator     | {validatorAddress} |
-| delegate | delegate      | {delegateAddress}  |
-| message  | module        | oracle             |
-| message  | action        | delegate           |
-| message  | sender        | {senderAddress}    |

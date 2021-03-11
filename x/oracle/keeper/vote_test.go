@@ -46,7 +46,7 @@ func (suite *KeeperTestSuite) TestCastVote() {
 	// Test cleanup
 
 	// Remove pending round
-	suite.k.DeletePendingRound(ctx, claimType, roundID)
+	suite.k.FinalizeRound(ctx, claimType, roundID)
 
 	pending = suite.k.GetPendingRounds(ctx, claimType)
 	suite.Equal(len(pending), 0)

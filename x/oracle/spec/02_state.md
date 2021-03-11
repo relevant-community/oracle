@@ -57,8 +57,8 @@ message Vote {
 
 An array of rounds that have not yet reached consensus
 
-- `0x02 | claimType | roundId -> roundId`
-- `0x02 | claimType -> []roundId`
+- `0x02 | claimType | roundId -> roundID`
+- `0x02 | claimType -> []roundID`
 
 ## Prevote
 
@@ -66,8 +66,15 @@ A hash of the prevote
 
 - `0x03 | prevote_hash -> prevote_hash`
 
-## FeedDelegateKey
+## Delegate
 
 Delegation mapping
 
-- `0x04 | val_address -> delegate_address`
+- `0x04 | validator_address -> delegate_address`
+- `0x05 | delegate_address -> validator_address`
+
+## LastFinalizedRound
+
+The most recent round that has reached consensus. Votes with RoundID lower than LastFinalizedRound are not processed
+
+- `0x06 | claimType -> roundID`

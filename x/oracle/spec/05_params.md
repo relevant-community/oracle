@@ -29,9 +29,9 @@ message ClaimParams {
 
 Each `OracleType` supports the following parameters:
 
-| Key            | Type          | Example                |
-| -------------- | ------------- | ---------------------- |
-| vote_period    | string (int)  | "5"                    |
-| vote_threshold | string (dec)  | "0.500000000000000000" |
-| prevote        | boolean (dec) | true                   |
-| claim_type     | string        | "myOracleClaimType"    |
+| Key            | Type          | Example                | Description                       |
+| -------------- | ------------- | ---------------------- | --------------------------------- |
+| vote_period    | string (int)  | "5"                    | duration of voting round          |
+| vote_threshold | string (dec)  | "0.500000000000000000" | threshold necessary for consensus |
+| prevote        | boolean (dec) | true                   | requires prevote round            |
+| claim_type     | string        | "myOracleClaimType"    | claim type                        |

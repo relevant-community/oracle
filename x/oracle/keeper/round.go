@@ -86,12 +86,13 @@ func (k Keeper) GetAllPendingRounds(ctx sdk.Context) (allPendingRounds map[strin
 	return allPendingRounds
 }
 
-// DeletePendingRound deletes the roundKey from the store and updates the LastFinalizedRound
-func (k Keeper) DeletePendingRound(ctx sdk.Context, claimType string, roundID uint64) {
+// FinalizeRound deletes the roundKey from the store and updates the LastFinalizedRound
+func (k Keeper) FinalizeRound(ctx sdk.Context, claimType string, roundID uint64) {
 	roundKey := types.GetRoundKey(claimType, roundID)
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.PendingRoundKey)
 	store.Delete(types.KeyPrefix(roundKey))
 	k.SetLastFinalizedRound(ctx, claimType, roundID)
+	k.DeleteVotesForRound(ctx, claimType, roundID)
 }
 
 // SetLastFinalizedRound sets the most recent finalized round
