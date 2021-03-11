@@ -17,3 +17,5 @@ dist
 tools-stamp
 buf-stamp
 artifacts
+
+coverage.out
