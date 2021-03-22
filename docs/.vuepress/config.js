@@ -15,7 +15,7 @@ module.exports = {
       lang: 'ru',
     },
   },
-  base: process.env.VUEPRESS_BASE || '/',
+  base: '/oracle/' || '/',
   head: [
     [
       'link',
@@ -60,6 +60,7 @@ module.exports = {
     docsRepo: 'relevant-community/oracle',
     docsDir: 'docs',
     label: 'sdk',
+    custom: true,
     topbar: {
       banner: false,
     },
@@ -68,6 +69,16 @@ module.exports = {
       nav: [
         {
           title: 'Using the Oracle Module',
+          children: [
+            {
+              title: 'Tutorial',
+              directory: true,
+              path: '/tutorial',
+            },
+          ],
+        },
+        {
+          title: 'Oracle Module Docs',
           children: [
             {
               title: 'Modules',
@@ -83,6 +94,44 @@ module.exports = {
               title: 'Demo app guide',
               directory: true,
               path: '/starport',
+            },
+          ],
+        },
+      ],
+    },
+
+    footer: {
+      logo: '/logo.svg',
+      textLink: {
+        text: 'cosmos.network',
+        url: 'https://cosmos.network',
+      },
+      services: [
+        {
+          service: 'twitter',
+          url: 'https://twitter.com/relevantfeed',
+        },
+        {
+          service: 'github',
+          url: 'https://github.com/relevant-community/oracle',
+        },
+      ],
+      links: [
+        {
+          title: 'Contributing',
+          children: [
+            {
+              title: 'Source code on GitHub',
+              url: 'https://github.com/relevant-community/oracle',
+            },
+          ],
+        },
+        {
+          title: 'Related Docs',
+          children: [
+            {
+              title: 'Cosmos SDK',
+              url: 'https://cosmos.network/docs',
             },
           ],
         },

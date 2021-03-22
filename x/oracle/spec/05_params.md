@@ -7,7 +7,7 @@ order: 5
 Each `claimType` your application needs to process, must be registered under in the Oracle Module params.
 `ClaimParams` is a map that contains the parameters for each `claimType`.
 
-```proto
+```protobuf
 // Params represents the parameters used by the oracle module.
 message Params {
   map<string, ClaimParams> claim_params  = 1 [(gogoproto.nullable) = false, (gogoproto.moretags) = "yaml:\"claim_params\""];

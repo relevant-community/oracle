@@ -8,7 +8,15 @@ The module is inspired by the [Terra Oracle Module](https://docs.terra.money/dev
 
 **oracle** is a blockchain built using Cosmos SDK and Tendermint and created with [Starport](https://github.com/tendermint/starport).
 
-## Get started
+## Get Started with a Tutorial
+
+https://relevant-community.github.io/oracle/tutorial/
+
+## Documentation
+
+https://relevant-community.github.io/oracle/
+
+## Starport Docs:
 
 ```
 starport serve

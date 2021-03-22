@@ -2,7 +2,7 @@
 order: 0
 title: "Overview"
 parent:
-  title: "Oracle"
+  title: "Oracle Module"
 -->
 
 # Oracle & Offchain Workers

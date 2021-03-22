@@ -8,6 +8,7 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/snapshots"
 	"github.com/relevant-community/oracle/app/params"
+	"github.com/relevant-community/oracle/cmd/oracled/cmd/worker"
 
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
@@ -34,7 +35,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/crisis"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
 	"github.com/relevant-community/oracle/app"
-	// this line is used by starport scaffolding # stargate/root/import
+	oraclecli "github.com/relevant-community/oracle/x/oracle/client/cli"
 )
 
 var ChainID string
@@ -94,6 +95,8 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig) {
 
 	a := appCreator{encodingConfig}
 	server.AddCommands(rootCmd, app.DefaultNodeHome, a.newApp, a.appExport, addModuleInitFlags)
+
+	oraclecli.InitializeWorker(worker.HandleBlock, worker.HandleTx)
 
 	// add keybase, auxiliary RPC, query, and tx child commands
 	rootCmd.AddCommand(

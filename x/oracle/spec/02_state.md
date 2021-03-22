@@ -35,7 +35,7 @@ A round contains all the validator votes for the given round and claim type.
 
 - `0x01 | claimType | roundID -> round`
 
-```
+```go
 // Round contains all claim votes for a given round
 message Round {
   uint64 roundId = 1;

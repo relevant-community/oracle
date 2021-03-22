@@ -12,7 +12,7 @@ import (
 
 // Message types for the oracle module
 const (
-	TypeMsgVote = "create_claim"
+	TypeMsgVote = "vote"
 )
 
 var (

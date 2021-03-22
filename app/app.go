@@ -85,7 +85,11 @@ import (
 	oracletypes "github.com/relevant-community/oracle/x/oracle/types"
 	tmjson "github.com/tendermint/tendermint/libs/json"
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+
 	// this line is used by starport scaffolding # stargate/app/moduleImport
+	"github.com/relevant-community/oracle/x/atom"
+	atomkeeper "github.com/relevant-community/oracle/x/atom/keeper"
+	atomtypes "github.com/relevant-community/oracle/x/atom/types"
 )
 
 const Name = "oracle"
@@ -133,6 +137,7 @@ var (
 		vesting.AppModuleBasic{},
 		oracle.AppModuleBasic{},
 		// this line is used by starport scaffolding # stargate/app/moduleBasic
+		atom.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -205,6 +210,7 @@ type App struct {
 
 	OracleKeeper oraclekeeper.Keeper
 	// this line is used by starport scaffolding # stargate/app/keeperDeclaration
+	atomKeeper atomkeeper.Keeper
 
 	// the module manager
 	mm *module.Manager
@@ -235,6 +241,7 @@ func New(
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey, capabilitytypes.StoreKey,
 		oracletypes.StoreKey,
 		// this line is used by starport scaffolding # stargate/app/storeKey
+		atomtypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -338,6 +345,12 @@ func New(
 	)
 
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
+	app.atomKeeper = *atomkeeper.NewKeeper(
+		appCodec,
+		keys[atomtypes.StoreKey],
+		keys[atomtypes.MemStoreKey],
+		app.OracleKeeper,
+	)
 
 	app.GovKeeper = govkeeper.NewKeeper(
 		appCodec, keys[govtypes.StoreKey], app.GetSubspace(govtypes.ModuleName), app.AccountKeeper, app.BankKeeper,
@@ -375,6 +388,7 @@ func New(
 		transferModule,
 		oracle.NewAppModule(appCodec, app.OracleKeeper),
 		// this line is used by starport scaffolding # stargate/app/appModule
+		atom.NewAppModule(appCodec, app.atomKeeper),
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -386,7 +400,7 @@ func New(
 		evidencetypes.ModuleName, stakingtypes.ModuleName, ibchost.ModuleName,
 	)
 
-	app.mm.SetOrderEndBlockers(crisistypes.ModuleName, govtypes.ModuleName, stakingtypes.ModuleName)
+	app.mm.SetOrderEndBlockers(crisistypes.ModuleName, govtypes.ModuleName, stakingtypes.ModuleName, atomtypes.ModuleName)
 
 	// NOTE: The genutils module must occur after staking so that pools are
 	// properly initialized with tokens from genesis accounts.
@@ -409,6 +423,7 @@ func New(
 		ibctransfertypes.ModuleName,
 		oracletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
+		atomtypes.ModuleName,
 	)
 
 	app.mm.RegisterInvariants(&app.CrisisKeeper)
@@ -602,6 +617,7 @@ func initParamsKeeper(appCodec codec.BinaryMarshaler, legacyAmino *codec.LegacyA
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	// this line is used by starport scaffolding # stargate/app/paramSubspace
+	paramsKeeper.Subspace(atomtypes.ModuleName)
 	paramsKeeper.Subspace(oracletypes.ModuleName)
 
 	return paramsKeeper
