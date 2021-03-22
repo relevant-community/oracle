@@ -42,29 +42,31 @@ func (k Keeper) UpdateAtomUsd(ctx sdk.Context) {
 		}
 
 		// take an average of all claims and commit to chain
-		var avgAtomUsd sdk.Dec
-		var blockNumber int64
-		for i, claimResult := range result.Claims {
+		avgAtomUsd := sdk.NewDec(0)
+		var blockHeight int64
+		var totalVotePower int64
+		for _, claimResult := range result.Claims {
 			claimHash := claimResult.ClaimHash
 			atomClaim, ok := k.oracleKeeper.GetClaim(ctx, claimHash).(*types.AtomUsd)
+
 			if ok == false {
 				fmt.Printf("Error retrieving claim")
 				continue
 			}
-			avgAtomUsd = avgAtomUsd.Mul(sdk.NewDec(int64(i - 1))).Add(atomClaim.Price).Quo(sdk.NewDec(int64(i)))
-			blockNumber = atomClaim.BlockHeight
+			weightedAvg := avgAtomUsd.Mul(sdk.NewDec(totalVotePower))
+			weightedVote := atomClaim.Price.Mul(sdk.NewDec(result.VotePower))
+			totalVotePower += result.VotePower
+			avgAtomUsd = weightedAvg.Add(weightedVote).Quo(sdk.NewDec(totalVotePower))
+			blockHeight = atomClaim.BlockHeight
 		}
 
 		atomUsd := &types.AtomUsd{
 			Price:       avgAtomUsd,
-			BlockHeight: blockNumber,
+			BlockHeight: blockHeight,
 		}
-
 		k.SetAtomUsd(ctx, *atomUsd)
 
-		// TODO delete the earlier rounds also
+		// TODO delete the any earlier pending rounds
 		k.oracleKeeper.FinalizeRound(ctx, claimType, roundID)
-
-		return
 	}
 }
