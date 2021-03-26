@@ -4,17 +4,38 @@ The Oracle module allows validators to run arbitrary off-chain worker processes 
 
 Unlike onchain smart contracts, offchain workers are able to run non-deterministic code, like fetching exchange price data via an api call, and long-running computations, i.e. AI alogrithms or graph analysis. All of the validators are expected to run the workers and come to a consensus on the results. Exactly how consensus is reached can be decided by the app developer.
 
+The module supports running an arbitrary amount of different oracles simultaniously.
+
 The module is inspired by the [Terra Oracle Module](https://docs.terra.money/dev/spec-oracle.html#concepts) as well as a more recent iteration of it by [Sommelier](https://github.com/PeggyJV/sommelier/tree/main/x/oracle).
 
 **oracle** is a blockchain built using Cosmos SDK and Tendermint and created with [Starport](https://github.com/tendermint/starport).
 
-## Get Started with a Tutorial
+## Getting Started
 
-https://relevant-community.github.io/oracle/tutorial/
+- Tutorial: https://relevant-community.github.io/oracle/tutorial/
+- Documentation: https://relevant-community.github.io/oracle/
 
-## Documentation
+Run the demo app that fetches ATOM/USD price:
 
-https://relevant-community.github.io/oracle/
+Clone the repo into your local folder and run:
+
+```
+$ starport serve
+```
+
+In a new browser window, star the oracle worker process:
+
+```
+$ oracled tx oracle start-worker --from alice -o text -y
+```
+
+After some time, check the on-chain Atom-USD price:
+
+```
+$ oracled query atom atomUsd
+```
+
+---
 
 ## Starport Docs:
 
