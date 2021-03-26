@@ -48,7 +48,7 @@ It is the responsibility of the app using the oracle module to remove stale orac
 
 ## Rewards and Punishments
 
-Rewards and Slashing logic is outside of the scope of the Oracle module. Modules relying on oracle data may implement their own logic. We reccomend taking a look at the [https://docs.terra.money/dev/spec-oracle.html#concepts](Terra Oracle) and the [https://github.com/PeggyJV/sommelier/tree/main/x/oracle](Sommelier Oracle) for examples.
+Rewards and Slashing logic is outside of the scope of the Oracle module. Modules relying on oracle data may implement their own logic. We reccomend taking a look at the (https://docs.terra.money/dev/spec-oracle.html#concepts)[Terra Oracle] and the (https://github.com/PeggyJV/sommelier/tree/main/x/oracle)[Sommelier Oracle] for examples.
 
 ## Validator Delegation
 
