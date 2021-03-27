@@ -68,32 +68,17 @@ module.exports = {
       auto: false,
       nav: [
         {
-          title: 'Using the Oracle Module',
+          title: 'Documentation',
           children: [
             {
-              title: 'Tutorial',
+              title: 'Atom/USD Tutorial',
               directory: true,
               path: '/tutorial',
             },
-          ],
-        },
-        {
-          title: 'Oracle Module Docs',
-          children: [
             {
-              title: 'Modules',
+              title: 'Oracle Module Docs',
               directory: true,
-              path: '/modules',
-            },
-          ],
-        },
-        {
-          title: 'Test with Starport',
-          children: [
-            {
-              title: 'Demo app guide',
-              directory: true,
-              path: '/starport',
+              path: '/modules/oracle',
             },
           ],
         },

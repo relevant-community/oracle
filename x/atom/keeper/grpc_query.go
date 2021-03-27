@@ -19,6 +19,9 @@ func (k Keeper) AtomUsd(c context.Context, req *types.QueryAtomUsdRequest) (*typ
 
 	ctx := sdk.UnwrapSDKContext(c)
 	atomUsd := k.GetAtomUsd(ctx)
+	if atomUsd == nil {
+		return nil, status.Errorf(codes.NotFound, "No results")
+	}
 
 	return &types.QueryAtomUsdResponse{AtomUsd: atomUsd}, nil
 }

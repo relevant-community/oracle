@@ -35,6 +35,8 @@ After some time, check the on-chain Atom-USD price:
 $ oracled query atom atomUsd
 ```
 
+You should see the latest Atom/USD price and the blockHeight at which it was captured.
+
 ---
 
 ## Starport Docs:

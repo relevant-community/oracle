@@ -11,15 +11,11 @@ parent:
 
 This document specifies the Oracle module for the Cosmos SDK.
 
-The Oracle module allows validators to run arbitrary off-chain worker processes and report the results for inclusion in the on-chain state.
+The Oracle module accepts and stores arbitrary `Claims` submitted by the chain validators. Multiple oracly types can run simultaniously.
 
-Unlike onchain smart contracts, offchain workers are able to run non-deterministic code, like fetching exchange price data via an api call, and long-running computations, i.e. AI alogrithms or graph analysis. All of the validators are expected to run the workers and come to a consensus on the results. Exactly how consensus is reached can be decided by the app developer.
+The module includes helper methods to design off-chain workers that supply data to the Oracle module.
 
-The module is inspired by the [Terra Oracle Module](https://docs.terra.money/dev/spec-oracle.html#concepts) as well as a more recent iteration of it by [Sommelier](https://github.com/PeggyJV/sommelier/tree/main/x/oracle).
-
-### Hi-Level Overview
-
-At its core, the Oracle module accepts and stores arbitrary `Claims`. When submitting a claim, a validator casts a vote for the particular claim. The oracle module tracks all Claims by `ClaimType` and voting `Round`. The module includes some helper methods to tally the votes for each round, however it is the responsibility of external modules to implement this logic as needed.
+The Oracle modules assists with deciding how a consensus is reached on oracle results, however it is the responsibility of external modules to implement this logic as needed.
 
 ## Contents
 
