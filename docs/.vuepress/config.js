@@ -15,7 +15,7 @@ module.exports = {
       lang: 'ru',
     },
   },
-  base: '/oracle/' || '/',
+  base: '/oracle/',
   head: [
     [
       'link',

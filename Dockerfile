@@ -8,7 +8,7 @@ RUN for bin in cmd/*; do CGO_ENABLED=0 go build -o=/usr/local/bin/$(basename $bi
 
 
 # Add to a distroless container
-FROM gcr.io/distroless/base
+FROM gcr.io/distroless/base:debug
 COPY --from=builder /usr/local/bin /usr/local/bin
 USER nonroot:nonroot
-CMD ["oracled start"]
+CMD ["/bin/sh"]
