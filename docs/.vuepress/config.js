@@ -59,7 +59,7 @@ module.exports = {
     repo: 'relevant-community/oracle',
     docsRepo: 'relevant-community/oracle',
     docsDir: 'docs',
-    label: 'sdk',
+    // label: 'sdk',
     custom: true,
     topbar: {
       banner: false,
@@ -86,10 +86,10 @@ module.exports = {
     },
 
     footer: {
-      logo: '/logo.svg',
+      logo: '/oracle/relevantlogo.svg',
       textLink: {
-        text: 'cosmos.network',
-        url: 'https://cosmos.network',
+        text: 'relevant.community',
+        url: 'https://relevant.community',
       },
       services: [
         {

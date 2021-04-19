@@ -1,12 +1,12 @@
 ---
-title: Cosmos Oracle Module
-description: The documentation of the Cosmos Oracle Module.
+title: Relevant Oracle Module
+description: The documentation of the Relevant Oracle Module for the Cosmso SDK.
 footer:
   newsletter: false
 aside: true
 ---
 
-# Cosmos Oracle Module
+# Relevant Oracle Module
 
 The Oracle module allows validators to run arbitrary off-chain worker processes and report the results for inclusion in the on-chain state.
 
