@@ -3,6 +3,10 @@ accounts:
     coins: ['1000token', '100000000stake']
   - name: bob
     coins: ['500token']
+  - name: val2
+    coins: ['400token']
+  - name: val3
+    coins: ['500token']
 validator:
   name: alice
   staked: '100000000stake'
