@@ -16,7 +16,7 @@ url = "https://github.com/relevant-community/oracle/issues"
 name = "balasan"
 
 [version]
-documentation = "https://github.com/relevant-community/oracle/blob/v0.1.0/readme.md"
+documentation = "https://raw.githubusercontent.com/relevant-community/oracle/v0.1.1/readme.md"
 repo = "https://github.com/relevant-community/oracle"
 sdk_compat = "v0.41.0"
-version = "v0.1.1"
+version = "v0.1.2"
